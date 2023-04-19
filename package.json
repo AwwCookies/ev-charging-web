@@ -9,10 +9,12 @@
     "pb:start": "./pb/pocketbase serve",
     "pb:setup": "node pb/setup.js",
     "docker:build": "docker build -t ev-charging-app .",
-    "docker:run": "docker run -p 3000:3000 ev-charging-app"
+    "docker:run": "docker run -p 3000:3000 ev-charging-app",
+    "cf:dev": "npx wrangler pages dev ./dist/ --d1=DB"
   },
   "dependencies": {
     "@vueuse/core": "^10.0.2",
+    "axios": "^1.3.6",
     "dotenv": "^16.0.3",
     "pocketbase": "^0.14.0",
     "vue": "^3.2.47"

@@ -1,4 +1,12 @@
 export async function onRequest(context) {
-    const data = await context.env.DB.prepare('SELECT * FROM charges').run();
-    return Response.json(data);  
-  }
+  let stmt = context.env.DB.prepare(`CREATE TABLE IF NOT EXISTS charges (
+      kWh INTEGER,
+      date DATE
+    );`);
+  await stmt.run();
+
+  stmt = context.env.DB.prepare('SELECT * FROM charges');
+  const data = await stmt.all();
+  
+  return Response.json(data.results);
+}

@@ -38,8 +38,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(charge, index) in getCharges" :key="index">
-            <td>{{ formatDate(charge.created) }}</td>
+          <tr v-for="(charge, index) in charges" :key="index">
+            <td>{{ formatDate(charge.date) }}</td>
             <td>{{ charge.kWh }} kWh</td>
             <td>${{ (charge.kWh * cost).toFixed(2) }}</td>
             <td>
@@ -59,7 +59,7 @@
 
     <div id="export" v-show="showExport">
       <textarea ref="exportTextArea" v-model="getExport" readonly>
-                      </textarea>
+                          </textarea>
     </div>
 
     <div id="price" ref="priceDiv">
@@ -73,13 +73,8 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import PocketBase from 'pocketbase'
 import { onClickOutside } from '@vueuse/core';
-
-const pb = new PocketBase('http://localhost:8090')
-
-const email = ref('')
-const password = ref('')
+import axios from 'axios';
 
 const charge = ref(0)
 const charges = ref([])
@@ -97,15 +92,18 @@ const isEditCost = ref(false);
 
 const priceDiv = ref(null);
 
-const login = () => {
-  pb.collection('users').authWithPassword(email.value, password.value)
-    .then((res) => {
-      console.log(res)
+const updateCharges = () => {
+  axios.get('/getCharges')
+    .then((response) => {
+      charges.value = response.data;
     })
-    .catch((err) => {
-      console.log(err)
-    })
+    .catch((error) => {
+      console.log('Error fetching charges:', error);
+    });
 }
+
+
+
 
 const addCharge = () => {
   // no charge entered or charge is negative
@@ -114,44 +112,35 @@ const addCharge = () => {
     return;
   };
 
-  pb.collection('charges').create({
-    kWh: charge.value,
-    created: new Date(),
-    user: pb.authStore.model.id // add user id to charge
-  })
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((err) => {
-      toastError(err.message);
-    })
-
-  charge.value = null;
-};
-
-const removeCharge = (id) => {
-  const confirmed = confirm('Are you sure you want to remove this charge?');
-  if (confirmed) {
-    pb.collection('charges').delete(id)
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((err) => {
-        toastError(err.message);
-      })
-  }
+  axios.post('/addCharge', {
+    kWh: charge.value
+  }).then((response) => {
+    updateCharges();
+    charge.value = null;
+  }).catch((error) => {
+    toastError(error);
+  });
 };
 
 const getCharges = computed(() => {
-  return charges.value.reverse()
+  return axios.get('/getCharges')
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.log('Error fetching charges:', error);
+    });
 })
 
-const clear = () => {
-  const confirmed = confirm('Are you sure you want to clear all charges?');
-  if (confirmed) {
-    charges.value = [];
-  }
-};
+
+
+
+// const clear = () => {
+//   const confirmed = confirm('Are you sure you want to clear all charges?');
+//   if (confirmed) {
+//     charges.value = [];
+//   }
+// };
 
 const totalCharge = computed(() => {
   const _charges = charges.value;
@@ -168,6 +157,10 @@ onClickOutside(exportTextArea, () => {
 
 onClickOutside(priceDiv, () => {
   isEditCost.value = false;
+})
+
+onMounted(() => {
+  updateCharges();
 })
 
 const formatDate = (_date) => {
@@ -194,31 +187,5 @@ const toastError = (message) => {
     showToast.value = false
   }, 3000);
 };
-
-const refreshChargesCollection = () => {
-  pb.collection('charges').getFullList()
-    .then((res) => {
-      charges.value = res.filter((charge) => {
-        const date = new Date(charge.created);
-        return date.getMonth() + 1 === selectedMonth.value;
-      })
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-}
-
-watch(selectedMonth, () => {
-  charges.value = []
-  refreshChargesCollection();
-})
-
-onMounted(() => {
-  refreshChargesCollection();
-})
-
-pb.collection('charges').subscribe('*', (res) => {
-  refreshChargesCollection();
-})
 
 </script>
