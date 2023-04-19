@@ -1,8 +1,7 @@
 export async function onRequest(context) {
-    const { results } = await context.env.test.prepare(
-        "SELECT * FROM Customers WHERE CompanyName = ?"
-      )
-        .bind("Bs Beverages")
-        .all();
-    return new Response(results)
-}
+    // Create a prepared statement with our query
+    const ps = context.env.TEST.prepare('SELECT * from Customers');
+    const data = await ps.first();
+  
+    return Response.json(data);
+  }
