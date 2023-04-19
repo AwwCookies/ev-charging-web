@@ -1,0 +1,24 @@
+{
+  "name": "ev-charging-app",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 3000",
+    "pb:start": "./pb/pocketbase serve",
+    "pb:setup": "node pb/setup.js",
+    "docker:build": "docker build -t ev-charging-app .",
+    "docker:run": "docker run -p 3000:3000 ev-charging-app"
+  },
+  "dependencies": {
+    "@vueuse/core": "^10.0.2",
+    "dotenv": "^16.0.3",
+    "pocketbase": "^0.14.0",
+    "vue": "^3.2.47"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.0.0",
+    "vite": "^4.1.4"
+  }
+}

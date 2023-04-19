@@ -1,0 +1,240 @@
+@import './base.css';
+
+#app {
+    padding: 10px;
+}
+
+#main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Background */
+body {
+    background-color: #121418;
+    color: #fff;
+}
+
+/* Title */
+h1 {
+    font-size: 3rem;
+    text-align: center;
+    color: #f5dd3c;
+}
+
+/* Label and Input */
+label {
+    display: block;
+    margin-top: 2rem;
+    font-size: 1.5rem;
+}
+
+input[type="number"] {
+    padding: 0.5rem;
+    font-size: 1.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    background-color: #f5dd3c;
+    color: #282c34;
+    margin-bottom: 1rem;
+}
+
+input[type="number"]:focus {
+    outline: none;
+    box-shadow: 0 0 5px #f5dd3c;
+}
+
+/* Buttons */
+button {
+    background-color: #282c34;
+    color: #f5dd3c;
+    padding: 0.5rem;
+    margin-right: 1rem;
+    border-radius: 0.5rem;
+    font-size: 1.5rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #f5dd3c;
+    color: #282c34;
+}
+
+/* kWh Used and Total Cost */
+h3 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Charges */
+h2 {
+    font-size: 2rem;
+    margin-top: 2rem;
+    color: #f5dd3c;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+li:before {
+    content: '\2022';
+    color: #f5dd3c;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+select {
+    padding: 0.5rem;
+    font-size: 1.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    background-color: #f5dd3c;
+    color: #282c34;
+    margin-bottom: 1rem;
+}
+
+select:focus {
+    outline: none;
+    box-shadow: 0 0 5px #f5dd3c;
+}
+
+#export {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+#export textarea {
+    width: 500px;
+    height: 300px;
+    padding: 1rem;
+    font-size: 1.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    background-color: #f5dd3c;
+    color: #282c34;
+    resize: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+}
+
+th {
+    background-color: #f5dd3c;
+    color: #282c34;
+    padding: 0.5rem;
+    text-align: left;
+    font-size: 1.5rem;
+    border: none;
+}
+
+td {
+    background-color: #282c34;
+    color: #f5dd3c;
+    padding: 0.5rem;
+    font-size: 1.5rem;
+    border: none;
+}
+
+tr:nth-child(even) td {
+    background-color: #f5dd3c;
+    color: #282c34;
+}
+
+tr:nth-child(odd) td {
+    background-color: #282c34;
+    color: #f5dd3c;
+}
+
+table th:first-child,
+table td:first-child {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+
+table th:last-child,
+table td:last-child {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+#import-export {
+    padding-top: 10px
+}
+
+.active {
+    background-color: #f5dd3c;
+    color: #282c34;
+}
+
+#cost {
+    display: flex;
+    font-size: 32px;
+    padding-top: 15px;
+}
+
+#cost>input {
+    width: 100px;
+    margin-left: 20px;
+}
+
+#report-button {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+.toast {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #3678f4;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    z-index: 1;
+    font-size: 50px;
+}
+
+#totals {
+    text-align: center;
+    text-decoration: underline;
+    text-decoration-color: #3678f4;
+}
+
+#price {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    font-size: 12px;
+}
+
+#price input {
+    width: 100px;
+}
