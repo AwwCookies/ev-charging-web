@@ -38,12 +38,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(charge, index) in charges" :key="index">
+          <tr v-for="(charge, index) in getCharges" :key="index">
             <td>{{ formatDate(charge.date) }}</td>
             <td>{{ charge.kWh }} kWh</td>
             <td>${{ (charge.kWh * cost).toFixed(2) }}</td>
             <td>
-              <button @click="removeCharge(charge.id)">Remove</button>
+              <button @click="removeCharge(charge.date)">Remove</button>
             </td>
           </tr>
         </tbody>
@@ -59,7 +59,7 @@
 
     <div id="export" v-show="showExport">
       <textarea ref="exportTextArea" v-model="getExport" readonly>
-                          </textarea>
+                                </textarea>
     </div>
 
     <div id="price" ref="priceDiv">
@@ -103,8 +103,6 @@ const updateCharges = () => {
 }
 
 
-
-
 const addCharge = () => {
   // no charge entered or charge is negative
   if (!charge.value || charge.value < 0) {
@@ -122,25 +120,40 @@ const addCharge = () => {
   });
 };
 
+const removeCharge = (date) => {
+  const confirmed = confirm('Are you sure you want to clear all charges?');
+  if (!confirmed) return;
+  axios.post('/removeCharge', {
+    date: date
+  }).then((response) => {
+    updateCharges();
+  }).catch((error) => {
+    toastError(error);
+  });
+};
+
 const getCharges = computed(() => {
-  return axios.get('/getCharges')
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      console.log('Error fetching charges:', error);
-    });
+  const _charges = charges.value;
+  return _charges.filter((charge) => {
+    const date = new Date(charge.date);
+    return date.getMonth() === selectedMonth.value;
+  }).reverse();
 })
 
 
+const clear = () => {
+  const confirmed = confirm('Are you sure you want to clear all charges?');
+  if (!confirmed) return;
 
-
-// const clear = () => {
-//   const confirmed = confirm('Are you sure you want to clear all charges?');
-//   if (confirmed) {
-//     charges.value = [];
-//   }
-// };
+  axios.get('/clearCharges')
+    .then((response) => {
+      updateCharges();
+    })
+    .catch((error) => {
+      console.log('Error clearing charges:', error);
+      toastError('Error clearing charges' + error);
+    });
+};
 
 const totalCharge = computed(() => {
   const _charges = charges.value;
