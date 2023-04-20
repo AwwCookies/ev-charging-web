@@ -4,7 +4,7 @@ const username = "emma"
 const password = "cookies"
 
 export async function onRequestPost(context) {
-    const secret = await context.env.KV.get("secret") || "secret"
+    const secret = "8rjg8jgsdf&W^6f6h!@#"
 
     const body = await context.request.json(); // get the post data as a JSON object
     const { username, password } = body; // extract the kWh and date properties from the post data
