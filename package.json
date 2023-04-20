@@ -13,6 +13,7 @@
     "cf:dev": "npx wrangler pages dev ./dist/ --d1=DB"
   },
   "dependencies": {
+    "@tsndr/cloudflare-worker-jwt": "^2.2.1",
     "@vueuse/core": "^10.0.2",
     "axios": "^1.3.6",
     "dotenv": "^16.0.3",

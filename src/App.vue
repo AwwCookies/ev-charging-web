@@ -4,8 +4,21 @@
       {{ toastMessage }}
     </div>
     <h1>EV Charging App</h1>
+
+    <div id="login" v-show="!token">
+      <div>
+        <label>Username: </label>
+        <input type="text" v-model="username" placeholder="username">
+      </div>
+      <div>
+        <label>Username: </label>
+        <input type="password" v-model="password" @keyup.enter="login" placeholder="username">
+      </div>
+      <button @click="login">Login</button>
+    </div>
+    
     <!-- Form to add charge -->
-    <div id="form">
+    <div id="form" v-show="token">
       <label>Enter charge (kWh): </label>
       <input @click="charge = ''" type="number" v-model="charge" @keyup.enter="addCharge" placeholder="0">
       <div>
@@ -14,7 +27,7 @@
       </div>
     </div>
     <!-- Display Charges -->
-    <div>
+    <div v-show="token">
       <h2>Charges</h2>
       <!-- Display kWh used and Total Cost -->
       <div>
@@ -51,18 +64,7 @@
 
     </div>
 
-    <div id="import-export">
-      <button @click="showExport = true">Export</button>
-      <button @click="importData">Import</button>
-    </div>
-
-
-    <div id="export" v-show="showExport">
-      <textarea ref="exportTextArea" v-model="getExport" readonly>
-                                </textarea>
-    </div>
-
-    <div id="price" ref="priceDiv">
+    <div id="price" ref="priceDiv" v-show="token">
       <p @click="isEditCost = true">${{ cost.toFixed(2) }}/kWh</p>
       <div id="edit-cost" v-show="isEditCost">
         <input type="number" v-model="cost" @keyup.enter="isEditCost = false" placeholder="0.10" step="0.01">
@@ -75,6 +77,12 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { onClickOutside } from '@vueuse/core';
 import axios from 'axios';
+import jwt from '@tsndr/cloudflare-worker-jwt'
+
+
+const token = ref('')
+const username = ref('')
+const password = ref('')
 
 const charge = ref(0)
 const charges = ref([])
@@ -92,8 +100,20 @@ const isEditCost = ref(false);
 
 const priceDiv = ref(null);
 
+const login = () => {
+  axios.post('/login', {
+    username: username.value,
+    password: password.value
+  }).then((response) => {
+    token.value = response.data.token;
+    updateCharges();
+  }).catch((error) => {
+    toastError(error);
+  });
+};
+
 const updateCharges = () => {
-  axios.get('/getCharges')
+  axios.post('/getCharges', { token: token.value })
     .then((response) => {
       charges.value = response.data;
     })
@@ -111,7 +131,8 @@ const addCharge = () => {
   };
 
   axios.post('/addCharge', {
-    kWh: charge.value
+    kWh: charge.value,
+    token: token.value
   }).then((response) => {
     updateCharges();
     charge.value = null;
@@ -124,7 +145,8 @@ const removeCharge = (date) => {
   const confirmed = confirm('Are you sure you want to clear all charges?');
   if (!confirmed) return;
   axios.post('/removeCharge', {
-    date: date
+    date: date,
+    token: token.value
   }).then((response) => {
     updateCharges();
   }).catch((error) => {
@@ -145,7 +167,7 @@ const clear = () => {
   const confirmed = confirm('Are you sure you want to clear all charges?');
   if (!confirmed) return;
 
-  axios.get('/clearCharges')
+  axios.post('/clearCharges', { token: token.value })
     .then((response) => {
       updateCharges();
     })
