@@ -31,9 +31,9 @@
       <h2>Charges</h2>
       <!-- Display kWh used and Total Cost -->
       <div>
-        <button v-for="month in 12" :key="month" :class="{ active: month === selectedMonth }"
-          @click="selectedMonth = month">
-          {{ getMonthName(month).substring(0, 3) }}
+        <button v-for="month in 12" :key="month" :class="{ active: month === selectedMonth + 1 }"
+          @click="selectedMonth = month - 1">
+          {{ getMonthName(month - 1).substring(0, 3) }}
         </button>
       </div>
 
