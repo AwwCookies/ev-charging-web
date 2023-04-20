@@ -179,7 +179,10 @@ const clear = () => {
 
 const totalCharge = computed(() => {
   const _charges = charges.value;
-  return _charges.reduce((total, charge) => total + charge.kWh, 0);
+  return _charges.filter((charge) => {
+    const date = new Date(charge.date);
+    return date.getMonth() === selectedMonth.value;
+  }).reduce((total, charge) => total + charge.kWh, 0);
 });
 
 const totalCost = computed(() => {
