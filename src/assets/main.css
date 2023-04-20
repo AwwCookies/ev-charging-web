@@ -31,7 +31,7 @@ label {
     font-size: 1.5rem;
 }
 
-input[type="number"] {
+input {
     padding: 0.5rem;
     font-size: 1.5rem;
     border-radius: 0.5rem;
@@ -41,7 +41,7 @@ input[type="number"] {
     margin-bottom: 1rem;
 }
 
-input[type="number"]:focus {
+input:focus {
     outline: none;
     box-shadow: 0 0 5px #f5dd3c;
 }

@@ -11,8 +11,8 @@
         <input type="text" v-model="username" placeholder="username">
       </div>
       <div>
-        <label>Username: </label>
-        <input type="password" v-model="password" @keyup.enter="login" placeholder="username">
+        <label>Password: </label>
+        <input type="password" v-model="password" @keyup.enter="login" placeholder="password">
       </div>
       <button @click="login">Login</button>
     </div>
