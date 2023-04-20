@@ -75,12 +75,12 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { onClickOutside } from '@vueuse/core';
+import { onClickOutside, useLocalStorage } from '@vueuse/core';
 import axios from 'axios';
 import jwt from '@tsndr/cloudflare-worker-jwt'
 
 
-const token = ref('')
+const token = useLocalStorage('token', null);
 const username = ref('')
 const password = ref('')
 
