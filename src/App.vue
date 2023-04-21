@@ -142,7 +142,7 @@ const addCharge = () => {
 };
 
 const removeCharge = (date) => {
-  const confirmed = confirm('Are you sure you want to clear all charges?');
+  const confirmed = confirm('Are you sure you want remove this charge?');
   if (!confirmed) return;
   axios.post('/removeCharge', {
     date: date,
