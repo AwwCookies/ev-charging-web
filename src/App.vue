@@ -91,7 +91,7 @@ const cost = ref(0.10)
 const exportTextArea = ref(null);
 const showExport = ref(false);
 
-const selectedMonth = ref(3);
+const selectedMonth = ref(new Date().getMonth());
 
 const showToast = ref(false);
 const toastMessage = ref('');
