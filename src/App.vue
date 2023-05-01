@@ -38,7 +38,7 @@
       </div>
 
       <div id="totals">
-        <h3>Energy Used: {{ totalCharge }}kWh | Total Cost: ${{ totalCost }}</h3>
+        <h3>Energy Used: {{ totalCharge,toFixed(2) }}kWh | Total Cost: ${{ totalCost }}</h3>
       </div>
 
       <table>
