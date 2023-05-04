@@ -36,10 +36,12 @@
           {{ getMonthName(month - 1).substring(0, 3) }}
         </button>
       </div>
+      
 
       <div id="totals">
         <h3>Energy Used: {{ totalCharge.toFixed(2) }}kWh | Total Cost: ${{ totalCost }}</h3>
       </div>
+
 
       <table>
         <thead>
@@ -61,6 +63,8 @@
           </tr>
         </tbody>
       </table>
+      
+      <button id="pdfBtn" @click="generatePDF">Export as PDF</button>
 
     </div>
 
@@ -77,8 +81,8 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { onClickOutside, useLocalStorage } from '@vueuse/core';
 import axios from 'axios';
-import jwt from '@tsndr/cloudflare-worker-jwt'
-
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const token = useLocalStorage('token', null);
 const username = ref('')
@@ -126,7 +130,7 @@ const updateCharges = () => {
 const addCharge = () => {
   // no charge entered or charge is negative
   if (!charge.value || charge.value < 0) {
-    toastError('Please enter a valid charge');
+    toastError(`Please enter a valid charge: Got-> ${charge.value}`);
     return;
   };
 
@@ -225,5 +229,30 @@ const toastError = (message) => {
     showToast.value = false
   }, 3000);
 };
+
+const generatePDF = () => {
+  const table = document.querySelector('table');
+  const monthName = getMonthName(selectedMonth.value);
+  const filename = `${monthName}-charges.pdf`;
+
+  html2canvas(table, {
+    ignoreElements: (element) => window.getComputedStyle(element).getPropertyValue('position') === 'fixed'
+  }).then((canvas) => {
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF();
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    const totalsDiv = document.getElementById('totals');
+    const totalsText = totalsDiv.innerText;
+    pdf.setFontSize(12);
+    pdf.text(2, 10, totalsText); // add the totals text at the top of the page
+    pdf.addImage(imgData, 'PNG', 0, 40, pdfWidth, pdfHeight); // add the image below the totals text
+
+    pdf.save(filename);
+  });
+};
+
 
 </script>

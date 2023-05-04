@@ -238,3 +238,10 @@ table td:last-child {
 #price input {
     width: 100px;
 }
+
+#pdfBtn {
+    position: fixed;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
